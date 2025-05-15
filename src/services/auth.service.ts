@@ -1,3 +1,4 @@
+import AppError from "../errors/AppError";
 import prisma from "../prisma/client";
 import {
   IEmailPassword,
@@ -23,13 +24,15 @@ export const loginUser: {
     });
   }
 
+  console.log("test login", user);
+
   if (!user) {
-    throw new Error("Invalid credential account, user not found");
+    throw new AppError("Invalid credential account, user not found", 404);
   }
 
   const isMatch = await bcrypt.compare(payload.password, user.password);
   if (!isMatch) {
-    throw new Error("Invalid credential, password wrong");
+    throw new AppError("Invalid credential, password wrong", 401);
   }
 
   const token = jwt.sign({ id: user.id, email: user.email }, "secret", {

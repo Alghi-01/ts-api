@@ -25,6 +25,6 @@ export const errorResponse = (
   // Unknown Error
   return res.status(500).send({
     message: "Internal server error",
-    detail: error,
+    error,
   });
 };
