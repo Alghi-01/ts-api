@@ -1,8 +1,12 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import prisma from "../prisma/client";
 import { createUser, findUser } from "../services/user.service";
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const users = await prisma.users.findMany({
       select: {
@@ -14,11 +18,15 @@ export const getUsers = async (req: Request, res: Response) => {
 
     res.status(200).send(users);
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };
 
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const newUser = await createUser(req.body);
 
@@ -26,15 +34,19 @@ export const registerUser = async (req: Request, res: Response) => {
 
     res.status(201).send(safeData);
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };
 
-export const getUserByEmail = async (req: Request, res: Response) => {
+export const getUserByEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await findUser({ email: req.params.email });
     res.status(200).send(user);
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };

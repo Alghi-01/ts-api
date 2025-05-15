@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./routers/user.router";
 import { PortType } from "./types/user.type";
+import { errorResponse } from "./middleware/errorHandler.middleware";
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/users", userRouter);
+
+app.use(errorResponse);
 
 app.listen(PORT, () => {
   console.log("Server running", PORT);
